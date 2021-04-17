@@ -28,6 +28,7 @@
 
 #include "bufferinfo/BufferInfoMapperMetadata.h"
 #include "utils/log.h"
+#include "utils/properties.h"
 
 namespace android::drm_hwcomposer {
 
@@ -85,10 +86,12 @@ uint32_t LegacyBufferInfoGetter::ConvertHalFormatToDrm(uint32_t hal_format) {
       return DRM_FORMAT_BGR888;
     case HAL_PIXEL_FORMAT_BGRA_8888:
       return DRM_FORMAT_ARGB8888;
+    case HAL_PIXEL_FORMAT_RGBA_8888:
+      if (!Properties::ShouldAvoidUsingAlphaBitsForFramebuffer())
+        return DRM_FORMAT_ABGR8888;
+      [[fallthrough]];
     case HAL_PIXEL_FORMAT_RGBX_8888:
       return DRM_FORMAT_XBGR8888;
-    case HAL_PIXEL_FORMAT_RGBA_8888:
-      return DRM_FORMAT_ABGR8888;
     case HAL_PIXEL_FORMAT_RGB_565:
       return DRM_FORMAT_BGR565;
     case HAL_PIXEL_FORMAT_YV12:
