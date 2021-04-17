@@ -144,4 +144,10 @@ auto Properties::GetDevicePath() -> std::string {
   return {path_pattern};
 }
 
+auto Properties::ShouldAvoidUsingAlphaBitsForFramebuffer() -> bool {
+  return (property_get_bool("ro.vendor.hwc.drm.avoid_using_alpha_bits_for_"
+                            "framebuffer",
+                            0) != 0);
+}
+
 }  // namespace android::drm_hwcomposer

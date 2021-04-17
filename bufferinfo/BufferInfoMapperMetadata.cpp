@@ -26,6 +26,7 @@
 #include <cinttypes>
 
 #include "utils/log.h"
+#include "utils/properties.h"
 
 namespace android::drm_hwcomposer {
 
@@ -114,6 +115,10 @@ auto BufferInfoMapperMetadata::GetBoInfo(buffer_handle_t handle)
     ALOGE("Failed to get FourCC format err=%d", err);
     return {};
   }
+
+  if (Properties::ShouldAvoidUsingAlphaBitsForFramebuffer() &&
+      bi.format == DRM_FORMAT_ABGR8888)
+    bi.format = DRM_FORMAT_XBGR8888;
 
   err = mapper.getPixelFormatModifier(handle, &bi.modifiers[0]);
   if (err != 0) {
