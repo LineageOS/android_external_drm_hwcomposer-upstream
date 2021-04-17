@@ -65,6 +65,8 @@ class Properties {
    * brightness range into [min_display_brightness, 1.0] instead of clamping.
    */
   static auto ScaleBrightnessRangeToMinBrightness() -> bool;
+
+  static auto ShouldAvoidUsingAlphaBitsForFramebuffer() -> bool;
 };
 
 }  // namespace android::drm_hwcomposer
