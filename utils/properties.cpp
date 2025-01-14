@@ -305,4 +305,8 @@ auto Properties::ShouldAvoidUsingAlphaBitsForFramebuffer() -> bool {
                             0) != 0);
 }
 
+auto Properties::ShouldDisablePlanes() -> bool {
+  return (property_get_bool("ro.vendor.hwc.drm.disable_planes", 0) != 0);
+}
+
 }  // namespace android::drm_hwcomposer

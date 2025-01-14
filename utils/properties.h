@@ -67,6 +67,7 @@ class Properties {
   static auto ScaleBrightnessRangeToMinBrightness() -> bool;
 
   static auto ShouldAvoidUsingAlphaBitsForFramebuffer() -> bool;
+  static auto ShouldDisablePlanes() -> bool;
 };
 
 }  // namespace android::drm_hwcomposer
