@@ -39,6 +39,7 @@
 #include "drm/drm.h"
 #include "utils/fd.h"
 #include "utils/log.h"
+#include "utils/properties.h"
 
 namespace android::drm_hwcomposer {
 
@@ -171,6 +172,13 @@ auto DrmDevice::Init(const char *path) -> int {
   for (uint32_t i = 0; i < plane_res->count_planes; ++i) {
     // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
     auto plane = DrmPlane::CreateInstance(*this, plane_res->planes[i]);
+
+    if (plane && Properties::ShouldDisablePlanes()) {
+      if (plane->GetType() == DRM_PLANE_TYPE_PRIMARY) {
+        planes_.emplace_back(std::move(plane));
+      }
+      continue;
+    }
 
     if (plane) {
       planes_.emplace_back(std::move(plane));
