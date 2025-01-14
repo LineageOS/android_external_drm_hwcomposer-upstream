@@ -34,6 +34,18 @@
 #include "utils/log.h"
 #include "utils/properties.h"
 
+static bool should_disable_planes() {
+  static bool first_run = true;
+  static bool ret = false;
+  if (first_run) {
+    first_run = false;
+    char proptext[PROPERTY_VALUE_MAX];
+    property_get("vendor.hwc.drm.disable_planes", proptext, "0");
+    ret = strncmp(proptext, "1", 1) == 0;
+  }
+  return ret;
+}
+
 namespace android::drm_hwcomposer {
 
 auto DrmDevice::CreateInstance(std::string const &path,
@@ -157,6 +169,13 @@ auto DrmDevice::Init(const char *path) -> int {
   for (uint32_t i = 0; i < plane_res->count_planes; ++i) {
     // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
     auto plane = DrmPlane::CreateInstance(*this, plane_res->planes[i]);
+
+    if (should_disable_planes()) {
+      if (plane->GetType() == DRM_PLANE_TYPE_PRIMARY) {
+        planes_.emplace_back(std::move(plane));
+      }
+      continue;
+    }
 
     if (plane) {
       planes_.emplace_back(std::move(plane));
