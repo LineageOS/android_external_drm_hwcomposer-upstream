@@ -37,6 +37,7 @@ class Properties {
   static auto GetBackendOverride() -> std::string;
   static auto GetDevicePath() -> std::string;
   static auto ShouldAvoidUsingAlphaBitsForFramebuffer() -> bool;
+  static auto ShouldDisablePlanes() -> bool;
 };
 
 }  // namespace android::drm_hwcomposer
