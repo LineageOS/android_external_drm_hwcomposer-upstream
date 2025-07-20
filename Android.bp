@@ -240,6 +240,7 @@ filegroup {
 prebuilt_etc {
     name: "drm_hwcomposer_hwc3_apex_vintf_upstream",
     src: "hwc3/hwc3-drm-upstream.xml",
+    filename_from_src: true,
     sub_dir: "vintf",
     vendor: true,
     installable: false,
