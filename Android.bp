@@ -189,8 +189,14 @@ cc_binary {
     relative_install_path: "hw",
     vendor: true,
 
-    vintf_fragments: [":drm_hwcomposer_vintf_manifest_upstream"],
-    init_rc: [":drm_hwcomposer_init_rc_upstream"],
+    vintf_fragments: select(soong_config_variable("drm_hwcomposer_upstream", "include_vintf_fragments"), {
+        false: [],
+        default: [":drm_hwcomposer_vintf_manifest_upstream"],
+    }),
+    init_rc: select(soong_config_variable("drm_hwcomposer_upstream", "include_init_rc"), {
+        false: [],
+        default: [":drm_hwcomposer_init_rc_upstream"],
+    }),
 }
 
 // Used by hwcomposer.drm_imagination
