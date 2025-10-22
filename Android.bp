@@ -40,7 +40,7 @@ cc_defaults {
 
     static_libs: [
         "libaidlcommonsupport",
-        "libdisplay_info",
+        "libdisplay_info_upstream",
         "libmath",
     ],
 
