@@ -475,6 +475,8 @@ class HwcDisplay : public ICompositorDisplay {
   std::unique_ptr<BacklightController> backlight_controller_;
 
   PresentedCompositionCache last_presented_composition_;
+
+  std::vector<uint8_t> edid_override;
 };
 
 }  // namespace android::drm_hwcomposer
