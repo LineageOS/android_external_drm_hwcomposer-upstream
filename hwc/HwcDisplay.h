@@ -355,6 +355,8 @@ class HwcDisplay {
 
   std::unique_ptr<DisplayHotplugConnectModeDetectedAtomReporter>
       display_mode_reporter_;
+
+  std::vector<uint8_t> edid_override;
 };
 
 }  // namespace android::drm_hwcomposer

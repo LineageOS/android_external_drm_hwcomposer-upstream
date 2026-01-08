@@ -70,6 +70,8 @@ class LibdisplayEdidWrapper final : public EdidWrapper {
   }
   static auto Create(DrmModePropertyBlobUnique blob)
       -> std::unique_ptr<LibdisplayEdidWrapper>;
+  static auto Create(std::vector<uint8_t> &blob)
+      -> std::unique_ptr<LibdisplayEdidWrapper>;
 
   void GetSupportedHdrTypes(std::vector<ui::Hdr> &types) override;
 
