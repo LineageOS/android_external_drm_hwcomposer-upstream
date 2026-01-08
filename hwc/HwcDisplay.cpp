@@ -22,6 +22,7 @@
 #include <cinttypes>
 #include <cstdint>
 #include <sstream>
+#include <sys/stat.h>
 
 #include <ui/ColorSpace.h>
 #include <ui/GraphicTypes.h>
@@ -550,6 +551,9 @@ auto HwcDisplay::GetRawEdid() -> std::vector<uint8_t> {
     return {};
   }
 
+  if (!edid_override.empty())
+    return {edid_override};
+
   auto *connector = GetPipe().connector->Get();
   auto blob = connector->GetEdidBlob();
   if (!blob || blob->length == 0) {
@@ -738,9 +742,30 @@ bool HwcDisplay::Init() {
                                                   kHdcpRetryTimeout);
     }
 
+    std::string edid_path = std::string("/vendor/firmware/") +
+        Properties::GetEdidOverridePath(pipeline_->connector->Get()->GetName());
+    if (!edid_path.empty()) {
+      int fd = open(edid_path.c_str(), O_RDONLY);
+      if (fd > 0) {
+        struct stat file_status;
+        if (fstat(fd, &file_status) >= 0) {
+          edid_override.resize(file_status.st_size);
+          ssize_t bytes_read = read(fd, edid_override.data(), edid_override.size());
+
+          if (bytes_read != file_status.st_size) {
+            edid_override.clear();
+            edid_override.shrink_to_fit();
+          }
+        }
+        close(fd);
+      }
+    }
+
 #if HAS_LIBDISPLAY_INFO
-    auto edid = LibdisplayEdidWrapper::Create(
-        pipeline_->connector->Get()->GetEdidBlob());
+    auto edid = LibdisplayEdidWrapper::Create(edid_override);
+    if (!edid)
+      edid = LibdisplayEdidWrapper::Create(
+          pipeline_->connector->Get()->GetEdidBlob());
     if (edid) {
       edid_wrapper_ = std::move(edid);
     } else {
