@@ -254,4 +254,11 @@ auto Properties::ShouldDisablePlanes() -> bool {
   return (property_get_bool("ro.vendor.hwc.drm.disable_planes", 0) != 0);
 }
 
+auto Properties::GetEdidOverridePath(std::string conn) -> std::string {
+  char path[PROPERTY_VALUE_MAX];
+  std::string prop = std::string("vendor.hwc.drm.") + conn + ".edid_path";
+  property_get(prop.c_str(), path, "");
+  return {path};
+}
+
 }  // namespace android::drm_hwcomposer

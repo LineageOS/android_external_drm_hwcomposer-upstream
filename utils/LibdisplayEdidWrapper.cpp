@@ -50,6 +50,21 @@ auto LibdisplayEdidWrapper::Create(DrmModePropertyBlobUnique blob)
       new LibdisplayEdidWrapper(std::move(info)));
 }
 
+auto LibdisplayEdidWrapper::Create(std::vector<uint8_t> &blob)
+    -> std::unique_ptr<LibdisplayEdidWrapper> {
+  if (blob.empty())
+    return nullptr;
+
+  auto *info = di_info_parse_edid(blob.data(), blob.size());
+  if (!info) {
+    ALOGW("Failed to parse edid blob.");
+    return nullptr;
+  }
+
+  return std::unique_ptr<LibdisplayEdidWrapper>(
+      new LibdisplayEdidWrapper(std::move(info)));
+}
+
 void LibdisplayEdidWrapper::GetSupportedHdrTypes(std::vector<ui::Hdr> &types) {
   types.clear();
 
