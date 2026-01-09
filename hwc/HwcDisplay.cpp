@@ -597,6 +597,10 @@ auto HwcDisplay::GetPort() const -> uint8_t {
 
   auto *connector = GetPipe().connector->Get();
 
+  auto port = Properties::GetPortOverride(connector->GetName());
+  if (port >= 0)
+    return static_cast<uint8_t>(port);
+
   constexpr uint8_t kDrmDeviceBitShift = 5U;
   constexpr uint8_t kDrmDeviceBitMask = 0xE0;
   constexpr uint8_t kConnectorBitMask = 0x1F;

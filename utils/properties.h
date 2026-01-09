@@ -51,6 +51,7 @@ class Properties {
   static auto ShouldAvoidUsingAlphaBitsForFramebuffer() -> bool;
   static auto ShouldDisablePlanes() -> bool;
   static auto GetEdidOverridePath(std::string conn) -> std::string;
+  static auto GetPortOverride(std::string conn) -> long;
 };
 
 }  // namespace android::drm_hwcomposer
