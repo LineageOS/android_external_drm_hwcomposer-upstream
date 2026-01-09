@@ -52,6 +52,7 @@ class Properties {
   static auto ShouldDisablePlanes() -> bool;
   static auto GetEdidOverridePath(std::string conn) -> std::string;
   static auto GetPortOverride(std::string conn) -> long;
+  static auto GetPrimaryDisplay() -> std::string;
 };
 
 }  // namespace android::drm_hwcomposer
