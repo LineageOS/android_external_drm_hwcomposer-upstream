@@ -316,4 +316,18 @@ auto Properties::GetEdidOverridePath(std::string conn) -> std::string {
   return {path};
 }
 
+auto Properties::GetPortOverride(std::string conn) -> long {
+  char port[PROPERTY_VALUE_MAX];
+  std::string prop = std::string("vendor.hwc.drm.") + conn + ".port_num";
+  property_get(prop.c_str(), port, "");
+
+  char * endptr;
+  errno = 0;
+  long num = std::strtol(port, &endptr, 10);
+  if (endptr == port || *endptr != '\0' || errno == ERANGE)
+    return -1;
+  else
+    return num;
+}
+
 }  // namespace android::drm_hwcomposer
