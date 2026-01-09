@@ -189,9 +189,20 @@ auto ResourceManager::GetOrderedConnectors() -> std::vector<DrmConnector *> {
 
   std::vector<DrmConnector *> ordered_connectors;
 
+  std::string primary = Properties::GetPrimaryDisplay();
+  if (!primary.empty()) {
+    for (auto &drm : drms_) {
+      for (const auto &conn : drm->GetConnectors()) {
+        if (conn->GetName() == primary) {
+          ordered_connectors.emplace_back(conn.get());
+        }
+      }
+    }
+  }
+
   for (auto &drm : drms_) {
     for (const auto &conn : drm->GetConnectors()) {
-      if (conn->IsInternal()) {
+      if (conn->IsInternal() && conn->GetName() != primary) {
         ordered_connectors.emplace_back(conn.get());
       }
     }
@@ -199,7 +210,7 @@ auto ResourceManager::GetOrderedConnectors() -> std::vector<DrmConnector *> {
 
   for (auto &drm : drms_) {
     for (const auto &conn : drm->GetConnectors()) {
-      if (conn->IsExternal()) {
+      if (conn->IsExternal() && conn->GetName() != primary) {
         ordered_connectors.emplace_back(conn.get());
       }
     }

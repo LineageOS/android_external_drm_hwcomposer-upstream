@@ -183,4 +183,10 @@ auto Properties::GetPortOverride(std::string conn) -> long {
     return num;
 }
 
+auto Properties::GetPrimaryDisplay() -> std::string {
+  char disp[PROPERTY_VALUE_MAX];
+  property_get("vendor.hwc.drm.primary_display", disp, "");
+  return {disp};
+}
+
 }  // namespace android::drm_hwcomposer
