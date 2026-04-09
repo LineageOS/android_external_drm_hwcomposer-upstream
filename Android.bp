@@ -261,6 +261,12 @@ filegroup {
 
 apex {
     name: "com.android.hardware.graphics.composer.drm_hwcomposer_upstream",
+    defaults: ["com.android.hardware.graphics.composer.drm_hwcomposer_upstream_defaults"],
+    manifest: ":drm_hwcomposer_hwc3_apex_manifest_upstream",
+}
+
+apex_defaults {
+    name: "com.android.hardware.graphics.composer.drm_hwcomposer_upstream_defaults",
     key: "com.android.hardware.key",
     certificate: ":com.android.hardware.certificate",
     file_contexts: ":drm_hwcomposer_hwc3_apex_file_contexts_upstream",
