@@ -1624,6 +1624,11 @@ bool HwcDisplay::ForcedScalingWithGpu() const {
   return hwc_->GetResMan().ForcedScalingWithGpu();
 }
 
+bool HwcDisplay::YuvLayersMustBeClientComposited() const {
+  const std::string &driver = GetPipe().device->GetName();
+  return driver == "virtio_gpu";
+}
+
 bool HwcDisplay::IsWritebackSupported() const {
   return !IsInHeadlessMode() && !is_virtual_ &&
          pipeline_->FindWritebackConnectorForPipeline() != nullptr;
