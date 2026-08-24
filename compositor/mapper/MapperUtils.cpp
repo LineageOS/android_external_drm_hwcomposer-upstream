@@ -52,7 +52,8 @@ bool MustBeClientComposited(const ICompositorDisplay* display,
     return true;
   }
 
-  if (Properties::ForceClientCompositionForYuvLayers()) {
+  if (Properties::ForceClientCompositionForYuvLayers() ||
+      display->YuvLayersMustBeClientComposited()) {
     const auto& bi = layer->GetLayerData().bi;
     if (bi.has_value() && BufferInfoGetter::IsDrmFormatYuv(bi->format)) {
       return true;
