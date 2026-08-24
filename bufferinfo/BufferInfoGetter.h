@@ -54,6 +54,7 @@ class BufferInfoGetter {
   static BufferInfoGetter *GetInstance();
 
   static bool IsDrmFormatRgb(uint32_t drm_format);
+  static bool IsDrmFormatYuv(uint32_t drm_format);
 };
 
 class LegacyBufferInfoGetter : public BufferInfoGetter {
