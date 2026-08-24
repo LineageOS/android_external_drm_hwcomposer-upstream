@@ -90,7 +90,9 @@ class DrmDevice {
     return max_resolution_;
   }
 
-  std::string GetName() const;
+  const std::string &GetName() const {
+    return name_;
+  }
 
   auto RegisterUserPropertyBlob(const void *data, size_t length) const
       -> DrmModeUserPropertyBlobUnique;
@@ -128,6 +130,7 @@ class DrmDevice {
   static auto IsKMSDev(const char *path) -> bool;
 
   SharedFd fd_;
+  std::string name_;
   const uint32_t index_in_dev_array_;
 
   std::vector<std::unique_ptr<DrmConnector>> connectors_;

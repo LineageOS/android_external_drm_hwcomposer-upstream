@@ -143,6 +143,17 @@ auto DrmDevice::Init(const char *path) -> int {
     return -EACCES;
   }
 
+  {
+    auto *ver = drmGetVersion(*GetFd());
+    if (ver != nullptr) {
+      name_ = ver->name;
+      drmFreeVersion(ver);
+    } else {
+      ALOGW("Failed to get drm version for fd=%d", *GetFd());
+      name_ = "generic";
+    }
+  }
+
   external_displays_enabled_ = Properties::EnableExternalDisplays();
 
   auto res = MakeDrmModeResUnique(*GetFd());
@@ -304,17 +315,7 @@ int DrmDevice::GetProperty(uint32_t obj_id, uint32_t obj_type,
   return found ? 0 : -ENOENT;
 }
 
-std::string DrmDevice::GetName() const {
-  auto *ver = drmGetVersion(*GetFd());
-  if (ver == nullptr) {
-    ALOGW("Failed to get drm version for fd=%d", *GetFd());
-    return "generic";
-  }
 
-  std::string name(ver->name);
-  drmFreeVersion(ver);
-  return name;
-}
 
 auto DrmDevice::IsKMSDev(const char *path) -> bool {
   // NOLINTNEXTLINE(misc-include-cleaner)
