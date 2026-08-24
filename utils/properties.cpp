@@ -305,6 +305,11 @@ auto Properties::FlatteningEnabled() -> bool {
   return (property_get_bool("vendor.hwc.drm.flattening", kDefault) != 0);
 }
 
+auto Properties::ForceClientCompositionForYuvLayers() -> bool {
+  return (property_get_bool("vendor.hwc.drm.force_client_composition_for_yuv",
+                            0) != 0);
+}
+
 auto Properties::ShouldAvoidUsingAlphaBitsForFramebuffer() -> bool {
   return (property_get_bool("ro.vendor.hwc.drm.avoid_using_alpha_bits_for_"
                             "framebuffer",

@@ -17,10 +17,12 @@
 
 #include <memory>
 
+#include "bufferinfo/BufferInfoGetter.h"
 #include "compositor/ICompositorDisplay.h"
 #include "compositor/LayerData.h"
 #include "drm/DrmPlane.h"
 #include "hwc/HwcLayer.h"
+#include "utils/properties.h"
 
 namespace android::drm_hwcomposer {
 
@@ -43,10 +45,21 @@ bool MustBeClientComposited(const ICompositorDisplay* display,
                             const HwcLayer* layer) {
   // As per Composition.aidl, if Composition is CLIENT, HWC is not allowed to
   // request a change.
-  return !HardwareSupportsLayerType(layer->GetSfType()) ||
-         !layer->IsLayerUsableAsDevice() || display->CtmByGpu() ||
-         (layer->GetLayerData().pi.RequireScalingOrPhasing() &&
-          display->ForcedScalingWithGpu());
+  if (!HardwareSupportsLayerType(layer->GetSfType()) ||
+      !layer->IsLayerUsableAsDevice() || display->CtmByGpu() ||
+      (layer->GetLayerData().pi.RequireScalingOrPhasing() &&
+       display->ForcedScalingWithGpu())) {
+    return true;
+  }
+
+  if (Properties::ForceClientCompositionForYuvLayers()) {
+    const auto& bi = layer->GetLayerData().bi;
+    if (bi.has_value() && BufferInfoGetter::IsDrmFormatYuv(bi->format)) {
+      return true;
+    }
+  }
+
+  return false;
 }
 
 bool DisplayCanUseCursorPlane(const ICompositorDisplay* display,

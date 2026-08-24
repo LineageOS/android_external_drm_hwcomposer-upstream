@@ -68,6 +68,7 @@ class Properties {
 
   static auto EnableBacklightControl() -> bool;
 
+  static auto ForceClientCompositionForYuvLayers() -> bool;
   static auto ShouldAvoidUsingAlphaBitsForFramebuffer() -> bool;
   static auto ShouldDisablePlanes() -> bool;
   static auto GetEdidOverridePath(std::string conn) -> std::string;
