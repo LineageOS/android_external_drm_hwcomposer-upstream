@@ -35,6 +35,7 @@
 #include "utils/BacklightController.h"
 #include "utils/BacklightFileInterface.h"
 #include "utils/log.h"
+#include "utils/properties.h"
 
 // NOLINTNEXTLINE(cert-err58-cpp,warnings-as-errors)
 static const std::string kBasePath = "/sys/class/backlight";
@@ -59,6 +60,12 @@ class FsBacklightFileInterface : public BacklightFileInterface {
 
 auto SysfsBacklightController::EnumerateBacklights() -> std::set<std::string> {
   std::set<std::string> ret;
+
+  if (!Properties::EnableBacklightControl()) {
+    ALOGI("Backlight control is disabled per property.");
+    return ret;
+  }
+
   std::unique_ptr<DIR, decltype(&closedir)> dir(opendir(kBasePath.c_str()),
                                                 closedir);
   if (!dir) {

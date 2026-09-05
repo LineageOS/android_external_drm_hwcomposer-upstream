@@ -260,6 +260,12 @@ auto Properties::SkipPlaneDamageClips() -> bool {
                             kDefault) != 0);
 }
 
+auto Properties::EnableBacklightControl() -> bool {
+  constexpr int kDefault = 1;
+  return (property_get_bool("vendor.hwc.drm.enable_backlight_control",
+                            kDefault) != 0);
+}
+
 auto Properties::MinDisplayBrightness() -> float {
   char buf[PROPERTY_VALUE_MAX] = {};
   const int prop_length = property_get("vendor.hwc.drm.min_display_brightness",
